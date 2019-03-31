@@ -191,7 +191,7 @@ def main():
             print_all_fund_data(fund_dict_list)
 
             last_tick_time = now
-            time.sleep(1)
+        time.sleep(1)
 
 if __name__ == "__main__":
     try:
