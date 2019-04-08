@@ -140,7 +140,7 @@ def print_all_stock_data(stock_dict_list):
     change_max_len = max([len(f["change"]) for f in stock_dict_list])
     rate_max_len = max([len(f["rate"]) for f in stock_dict_list])
 
-    print("_" * (name_max_len + index_max_len + change_max_len + rate_max_len + 21))
+    print("_" * (name_max_len + index_max_len + change_max_len + rate_max_len + 10))
 
     for stock_dict in stock_dict_list:
         line = b"|" + stock_dict["name"].ljust(name_max_len) + \
@@ -156,8 +156,8 @@ def print_all_stock_data(stock_dict_list):
                 line += stock_dict["rate"].ljust(rate_max_len)
         else:
             line += stock_dict["rate"].ljust(rate_max_len)
+        line += b"|"
 
-        line += b" | " + stock_dict["rate"].ljust(rate_max_len) + b" |"
         print line.decode('gb18030')
 
 def main():
