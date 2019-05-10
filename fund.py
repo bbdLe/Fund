@@ -54,14 +54,15 @@ def get_all_fund_data(fund_list):
         fund_data_list.append(get_fund(fund_id))
     return fund_data_list
 
-def process_all_fund_data(fund_data_list):
+def process_all_fund_data(fund_data_list, buy_fund_pair_list):
     fund_dict_list = []
     desc_dict = {
         "name" : u"基金名称".encode('gb18030'),
         "dwjz" : u"单位价值".encode('gb18030'),
         "gz" : u"估值".encode('gb18030'),
         "gszzl" : u"估算涨幅".encode('gb18030'),
-        "gztime" : u"更新时间".encode('gb18030')
+        "gztime" : u"更新时间".encode('gb18030'),
+        "total" : u"总值".encode("gb18030")
     }
 
     fund_dict_list.append(desc_dict)
@@ -75,6 +76,13 @@ def process_all_fund_data(fund_data_list):
         fund_dict["dwjz"] = fund_data["Expansion"]["DWJZ"].encode('gb18030')
         fund_dict["gszzl"] = fund_data["Expansion"]["GSZZL"].encode('gb18030')
         fund_dict["gztime"] = fund_data["Expansion"]["GZTIME"].encode('gb18030')
+        fund_dict["total"] = 0
+        for item in buy_fund_pair_list:
+            if item[0] == fund_data["Expansion"]["FCODE"]:
+                fund_dict["total"] = float(item[1]) * float(fund_dict["gz"])
+                break
+        
+        fund_dict["total"] = "{0:.2f}".format(fund_dict["total"])
 
         fund_dict_list.append(fund_dict)
     return fund_dict_list
@@ -85,9 +93,11 @@ def print_all_fund_data(fund_dict_list):
     dwjz_max_len = max([len(f["dwjz"]) for f in fund_dict_list])
     gszzl_max_len = max([len(f["gszzl"]) for f in fund_dict_list])
     gztime_max_len = max([len(f["gztime"]) for f in fund_dict_list])
+    total_max_len = max([len(f["total"]) for f in fund_dict_list])
 
-    print("_" * (name_max_len + gz_max_len + dwjz_max_len + gszzl_max_len + gztime_max_len + 15))
+    print("_" * (name_max_len + gz_max_len + dwjz_max_len + gszzl_max_len + gztime_max_len + total_max_len + 17))
 
+    total_value = 0
     for fund_dict in fund_dict_list:
         line = b"|" + fund_dict["name"].ljust(name_max_len) + \
         b" | " + fund_dict["dwjz"].ljust(dwjz_max_len) + \
@@ -103,9 +113,17 @@ def print_all_fund_data(fund_dict_list):
         else:
             line += fund_dict["gszzl"].ljust(gszzl_max_len)
 
+        line += b" | " + fund_dict["total"].ljust(total_max_len)
+
         line += b" | " + fund_dict["gztime"].ljust(gztime_max_len) + b" | "
 
         print line.decode('gb18030')
+
+        if fund_dict["total"].decode('gb18030') != u"总值":
+            total_value += float(fund_dict['total'])
+    
+    print
+    print("基金总值: {0:.2f}".format(total_value))
 
 def get_all_stock_data(stock_id_list):
     stock_data_list = []
@@ -169,6 +187,7 @@ def main():
     cf.read("./fund.conf")
     fund_id_list = cf.options("fund")
     stock_id_list = cf.options("stock")
+    buy_fund_pair_list = cf.items("buy_fund")
 
     print HIDE_CURSOR,
     last_tick_time = 0
@@ -180,7 +199,7 @@ def main():
             stock_dict_list = process_all_stock_data(stock_data_list)
 
             fund_data_list = get_all_fund_data(fund_id_list)
-            fund_dict_list = process_all_fund_data(fund_data_list)
+            fund_dict_list = process_all_fund_data(fund_data_list, buy_fund_pair_list)
 
             rows, columns = os.popen('stty size', 'r').read().split()
 
