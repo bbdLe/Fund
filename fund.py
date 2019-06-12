@@ -118,7 +118,7 @@ def print_all_fund_data(fund_dict_list):
         else:
             line += fund_dict["gszzl"].ljust(gszzl_max_len)
 
-        line += b" | " + fund_dict["gssy"].ljust(total_max_len)
+        line += b" | " + fund_dict["gssy"].ljust(gssy_max_len)
 
         line += b" | " + fund_dict["total"].ljust(total_max_len)
 
