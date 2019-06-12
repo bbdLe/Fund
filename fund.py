@@ -61,6 +61,7 @@ def process_all_fund_data(fund_data_list, buy_fund_pair_list):
         "dwjz" : u"单位价值".encode('gb18030'),
         "gz" : u"估值".encode('gb18030'),
         "gszzl" : u"估算涨幅".encode('gb18030'),
+        "gssy" : u"估算收益".encode('gb18030'),
         "gztime" : u"更新时间".encode('gb18030'),
         "total" : u"总值".encode("gb18030")
     }
@@ -77,12 +78,15 @@ def process_all_fund_data(fund_data_list, buy_fund_pair_list):
         fund_dict["gszzl"] = fund_data["Expansion"]["GSZZL"].encode('gb18030')
         fund_dict["gztime"] = fund_data["Expansion"]["GZTIME"].encode('gb18030')
         fund_dict["total"] = 0
+        fund_dict["gssy"] = 0
         for item in buy_fund_pair_list:
             if item[0] == fund_data["Expansion"]["FCODE"]:
                 fund_dict["total"] = float(item[1]) * float(fund_dict["gz"])
+                fund_dict["gssy"] = float(item[1]) * (float(fund_dict["gz"]) - float(fund_dict["dwjz"]))
                 break
         
         fund_dict["total"] = "{0:.2f}".format(fund_dict["total"])
+        fund_dict["gssy"] = "{0:.2f}".format(fund_dict["gssy"])
 
         fund_dict_list.append(fund_dict)
     return fund_dict_list
@@ -94,8 +98,9 @@ def print_all_fund_data(fund_dict_list):
     gszzl_max_len = max([len(f["gszzl"]) for f in fund_dict_list])
     gztime_max_len = max([len(f["gztime"]) for f in fund_dict_list])
     total_max_len = max([len(f["total"]) for f in fund_dict_list])
+    gssy_max_len = max([len(f["gssy"]) for f in fund_dict_list])
 
-    print("_" * (name_max_len + gz_max_len + dwjz_max_len + gszzl_max_len + gztime_max_len + total_max_len + 17))
+    print("_" * (name_max_len + gz_max_len + dwjz_max_len + gszzl_max_len + gztime_max_len + total_max_len + gssy_max_len + 20))
 
     total_value = 0
     for fund_dict in fund_dict_list:
@@ -112,6 +117,8 @@ def print_all_fund_data(fund_dict_list):
                 line += fund_dict["gszzl"].ljust(gszzl_max_len)
         else:
             line += fund_dict["gszzl"].ljust(gszzl_max_len)
+
+        line += b" | " + fund_dict["gssy"].ljust(total_max_len)
 
         line += b" | " + fund_dict["total"].ljust(total_max_len)
 
