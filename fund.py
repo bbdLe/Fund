@@ -166,7 +166,7 @@ def process_all_stock_data(stock_data_list):
     stock_dict_list.append(desc_dict)
 
     for stock_data in stock_data_list:
-        stock_list = re.search(r"=\"(\S*)\"", stock_data).group(1).split(",")
+        stock_list = re.search(r"=\"([ \S]*)\"", stock_data).group(1).split(",")
 
         stock_dict = {}
         stock_dict["name"] = stock_list[0].encode('gb18030')
