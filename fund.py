@@ -12,6 +12,7 @@ import logging.config
 import ConfigParser
 import optparse
 import re
+import traceback
 
 # API_URL
 fund_api_url = "https://fundmobapi.eastmoney.com/FundMApi/FundVarietieValuationDetail.ashx"
@@ -237,7 +238,12 @@ def main():
         time.sleep(1)
 
 if __name__ == "__main__":
-    try:
-        main()
-    except:
-        print SHOW_CURSOR
+    while 1:
+    	try:
+        	main()
+	except KeyboardInterrupt:
+		print SHOW_CURSOR 
+		break
+    	except Exception as e:
+		print SHOW_CURSOR
+		traceback.print_exc()
