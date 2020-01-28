@@ -85,6 +85,8 @@ def process_all_fund_data(fund_data_list, buy_fund_pair_list):
         fund_dict["name"] = fund_data["Expansion"]["SHORTNAME"].encode('gb18030')
         fund_dict["gz"] = fund_data["Expansion"]["GZ"].encode('gb18030')
         fund_dict["dwjz"] = fund_data["Expansion"]["DWJZ"].encode('gb18030')
+        if float(fund_data["Expansion"]["GSZZL"]) > 0:
+           fund_data["Expansion"]["GSZZL"] = "+" + fund_data["Expansion"]["GSZZL"]  
         fund_dict["gszzl"] = fund_data["Expansion"]["GSZZL"].encode('gb18030')
         fund_dict["gztime"] = fund_data["Expansion"]["GZTIME"].encode('gb18030')
         fund_dict["total"] = 0
@@ -181,6 +183,9 @@ def process_all_stock_data(stock_data_list):
         stock_dict["name"] = stock_list[0].encode('gb18030')
         stock_dict["index"] = stock_list[1].encode('gb18030')
         stock_dict["change"] = stock_list[2].encode('gb18030')
+
+        if float(stock_list[3]) > 0:
+            stock_list[3] = "+" + stock_list[3]
         stock_dict["rate"] = stock_list[3].encode('gb18030')
         stock_dict_list.append(stock_dict)
     return stock_dict_list
