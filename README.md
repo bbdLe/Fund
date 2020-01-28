@@ -1,6 +1,20 @@
 # shell基金小工具
 
-1. 在fund.conf配置需要的基金和指数
+1. 运行环境
+
+```
+Python 2.7
+Linux
+Xshell
+```
+2. 安装
+
+```bash
+git clone git@github.com:bbdLe/Fund.git
+cd Fund
+```
+
+3. 在fund.conf配置需要的基金和指数
 
 ``` 
 [fund]
@@ -17,6 +31,12 @@ sh000932=中证消费
 sz399922=中证红利
 ```
 
-2. 运行: python fund.py
+4. 运行 
 
-3. 效果图 ![效果图](https://github.com/bbdle/Fund/raw/master/photo.png)
+```bash
+python fund.py
+```
+
+3. 效果图 
+
+![效果图](https://github.com/bbdle/Fund/raw/master/photo.png)
