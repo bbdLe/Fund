@@ -17,6 +17,10 @@ import traceback
 # API_URL
 fund_api_url = "https://fundmobapi.eastmoney.com/FundMApi/FundVarietieValuationDetail.ashx"
 stock_api_url = "http://hq.sinajs.cn/list=s_{0}"
+stock_outland_api_url = "http://hq.sinajs.cn/list={0}"
+
+# 境外指数
+OUTLAND_STOCK = ["int_nasdaq", "int_dji", "int_sp500", "int_hangseng"]
 
 # 控制字符
 CLEAR_SCREEN = "\x1B[2J\x1B[3J\x1B[H"
@@ -46,7 +50,11 @@ def get_fund(fund_id):
     return get(fund_api_url, data)
 
 def get_stock(stock_id):
-    response = urllib2.urlopen(stock_api_url.format(stock_id))
+    response = None
+    if stock_id not in OUTLAND_STOCK:
+        response = urllib2.urlopen(stock_api_url.format(stock_id))
+    else:
+        response = urllib2.urlopen(stock_outland_api_url.format(stock_id))
     return response.read()
 
 def get_all_fund_data(fund_list):
@@ -219,7 +227,7 @@ def main():
 
     while 1:
         now = time.time()
-        if now> last_tick_time + int(options.delay):
+        if now > last_tick_time + int(options.delay):
             stock_data_list = get_all_stock_data(stock_id_list)
             stock_dict_list = process_all_stock_data(stock_data_list)
 
