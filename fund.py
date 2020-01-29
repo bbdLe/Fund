@@ -184,6 +184,7 @@ def process_all_stock_data(stock_data_list):
         stock_dict["index"] = stock_list[1].encode('gb18030')
         stock_dict["change"] = stock_list[2].encode('gb18030')
 
+        stock_list[3] = stock_list[3].replace("%", "")
         if float(stock_list[3]) > 0:
             stock_list[3] = "+" + stock_list[3]
         stock_dict["rate"] = stock_list[3].encode('gb18030')
